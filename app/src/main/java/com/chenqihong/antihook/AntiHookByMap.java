@@ -1,6 +1,13 @@
 package com.chenqihong.antihook;
 
 import android.content.Context;
+import android.provider.Telephony;
+import android.telephony.TelephonyManager;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by chenqihong on 2017/9/7.
@@ -12,7 +19,7 @@ public class AntiHookByMap {
     private boolean isExposedBySubstrate;
     public boolean isExposed(){
         try {
-            Set libraries = new HashSet();
+            Set<String> libraries = new HashSet();
             String mapsFilename = "/proc/" + android.os.Process.myPid() + "/maps";
             BufferedReader reader = new BufferedReader(new FileReader(mapsFilename));
             String line;
@@ -37,5 +44,10 @@ public class AntiHookByMap {
         catch (Exception e) {
 
         }
+
+        TelephonyManager telephony = (TelephonyManager)mContext.getSystemService(Context.TELEPHONY_SERVICE);
+        telephony.getDeviceId();
+
+        return false;
     }
 }
