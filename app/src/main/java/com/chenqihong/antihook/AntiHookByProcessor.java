@@ -20,12 +20,12 @@ public class AntiHookByProcessor {
         mContext = context;
     }
 
-    public void getApplicationInfo(){
-        mApplicationInfoList = mContext.getPackageManager()
+    public List<ApplicationInfo> getApplicationInfo(){
+        return mApplicationInfoList = mContext.getPackageManager()
                 .getInstalledApplications(PackageManager.GET_META_DATA);
     }
 
-    public boolean hasExposed(){
+    public boolean isExposed(){
         for(ApplicationInfo applicationInfo: mApplicationInfoList){
             if(applicationInfo.packageName.contains(".xposed")){
                 isExposedByXposed = true;

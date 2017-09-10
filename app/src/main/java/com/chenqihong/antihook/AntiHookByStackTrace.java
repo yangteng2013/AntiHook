@@ -37,6 +37,20 @@ public class AntiHookByStackTrace {
         return false;
     }
 
+    public boolean hasPackageNameInStack(String name){
+        try{
+            throw new AntiHookException();
+        }catch (AntiHookException e){
+            for(StackTraceElement stackTraceElement : e.getStackTrace()){
+                if(stackTraceElement.getClassName().contains(name)){
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     public boolean isExposedByXposed(){
         return isExposedByXposed;
     }

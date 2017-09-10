@@ -50,4 +50,12 @@ public class AntiHookByMap {
 
         return false;
     }
+
+    public boolean isExposedByXposed() {
+        return isExposedByXposed;
+    }
+
+    public boolean isExposedBySubstrate() {
+        return isExposedBySubstrate;
+    }
 }
