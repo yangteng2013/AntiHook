@@ -96,6 +96,11 @@ public class Strategy {
                 || !TextUtils.isEmpty(androidId = SecureSettings.getAndroidProperty(mContext, Settings.Secure.ANDROID_ID))) {
             return androidId;
         }
+
+        if(!androidId.equals(Properties.getString("ro.product.device"))){
+            hasBravoExposed = true;
+        }
+
         return Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 }
