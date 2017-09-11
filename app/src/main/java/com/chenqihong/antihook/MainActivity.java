@@ -13,11 +13,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Strategy.getInstance(this).alphaChecking();
-        Strategy.getInstance(this).bravoChecking();
         TelephonyManager manager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         String id = Strategy.getInstance(this).getSecureDeviceId();
         TextView textView = (TextView)findViewById(R.id.text);
-        textView.setText("Device ID:" + manager.getDeviceId()+
+        textView.setText("Device ID:" + id +
                 "Android ID:" + Strategy.getInstance(this).getSecureAndroidId() +
                 " alpha:" + Strategy.getInstance(this).isHasAlphaXposed() +
                 " bravo:" + Strategy.getInstance(this).isHasBravoExposed());
