@@ -14,9 +14,7 @@ import java.util.Set;
  */
 
 public class AntiHookByMap {
-    private Context mContext;
     private boolean isExposedByXposed;
-    private boolean isExposedBySubstrate;
     public boolean isExposed(){
         try {
             Set<String> libraries = new HashSet();
@@ -30,12 +28,8 @@ public class AntiHookByMap {
                 }
             }
             for (String library : libraries) {
-                if(library.contains("com.saurik.substrate")) {
-                    isExposedByXposed = true;
-                    return true;
-                }
                 if(library.contains("XposedBridge.jar")) {
-                    isExposedBySubstrate = true;
+                    isExposedByXposed = true;
                     return true;
                 }
             }
@@ -45,17 +39,10 @@ public class AntiHookByMap {
 
         }
 
-        TelephonyManager telephony = (TelephonyManager)mContext.getSystemService(Context.TELEPHONY_SERVICE);
-        telephony.getDeviceId();
-
         return false;
     }
 
     public boolean isExposedByXposed() {
         return isExposedByXposed;
-    }
-
-    public boolean isExposedBySubstrate() {
-        return isExposedBySubstrate;
     }
 }

@@ -5,4 +5,7 @@ package com.chenqihong.antihook;
  */
 
 public class AntiHookException extends Exception {
+    public AntiHookException(String message){
+        super(message);
+    }
 }

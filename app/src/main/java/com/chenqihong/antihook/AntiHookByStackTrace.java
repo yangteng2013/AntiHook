@@ -9,26 +9,13 @@ import android.telephony.TelephonyManager;
 
 public class AntiHookByStackTrace {
     private boolean isExposedByXposed;
-    private boolean isExposedBySubstrate;
     public boolean isExposed(){
         try{
-            throw new AntiHookException();
+            throw new AntiHookException("catch here");
         }catch (AntiHookException e){
-            int zygoteInitCallCount = 0;
             for(StackTraceElement stackTraceElement : e.getStackTrace()){
-                if(stackTraceElement.getClassName().equals("com.android.internal.os.ZygoteInit")) {
-                    zygoteInitCallCount++;
-                    if(zygoteInitCallCount == 2) {
-                        isExposedBySubstrate = true;
-                        return true;
-                    }
-                }
-
-                if(stackTraceElement.getClassName().contains(".Xposed")){
+                if(stackTraceElement.getClassName().contains(".xposed")){
                     isExposedByXposed = true;
-                    return true;
-                }else if(stackTraceElement.getClassName().contains(".substrate")){
-                    isExposedBySubstrate = true;
                     return true;
                 }
             }
@@ -39,7 +26,7 @@ public class AntiHookByStackTrace {
 
     public boolean hasPackageNameInStack(String name){
         try{
-            throw new AntiHookException();
+            throw new AntiHookException("catch here");
         }catch (AntiHookException e){
             for(StackTraceElement stackTraceElement : e.getStackTrace()){
                 if(stackTraceElement.getClassName().contains(name)){
@@ -53,9 +40,5 @@ public class AntiHookByStackTrace {
 
     public boolean isExposedByXposed(){
         return isExposedByXposed;
-    }
-
-    public boolean isExposedBySubstrate(){
-        return isExposedBySubstrate;
     }
 }

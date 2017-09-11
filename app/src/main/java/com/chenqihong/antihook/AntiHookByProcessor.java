@@ -14,7 +14,6 @@ public class AntiHookByProcessor {
     private List<ApplicationInfo> mApplicationInfoList;
     private Context mContext;
     private boolean isExposedByXposed;
-    private boolean isExposedBySubstrate;
 
     public AntiHookByProcessor(Context context){
         mContext = context;
@@ -26,14 +25,12 @@ public class AntiHookByProcessor {
     }
 
     public boolean isExposed(){
+        mApplicationInfoList = mContext.getPackageManager()
+                .getInstalledApplications(PackageManager.GET_META_DATA);
+
         for(ApplicationInfo applicationInfo: mApplicationInfoList){
             if(applicationInfo.packageName.contains(".xposed")){
                 isExposedByXposed = true;
-                return true;
-            }
-
-            if(applicationInfo.packageName.contains(".substrate")){
-                isExposedBySubstrate = true;
                 return true;
             }
         }
@@ -43,9 +40,5 @@ public class AntiHookByProcessor {
 
     public boolean isExposedByXposed(){
         return isExposedByXposed;
-    }
-
-    public boolean isExposedBySubstrate(){
-        return isExposedBySubstrate;
     }
 }

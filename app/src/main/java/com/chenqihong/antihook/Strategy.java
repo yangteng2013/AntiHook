@@ -2,6 +2,8 @@ package com.chenqihong.antihook;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
+import android.provider.Settings;
+import android.text.TextUtils;
 
 import java.util.Iterator;
 import java.util.List;
@@ -14,7 +16,6 @@ public class Strategy {
     private volatile static Strategy mInstance;
     private Context mContext;
     private boolean hasAlphaXposed;
-    private boolean hasAlphaSubstrated;
     private boolean hasBravoExposed;
     private AntiHookByMap antiHookByMap;
     private AntiHookByStackTrace antiHookByStackTrace;
@@ -44,20 +45,19 @@ public class Strategy {
         hasAlphaXposed = antiHookByMap.isExposedByXposed() |
                 antiHookByProcessor.isExposedByXposed() |
                 antiHookByStackTrace.isExposedByXposed();
-
-        hasAlphaSubstrated = antiHookByMap.isExposedBySubstrate() |
-                antiHookByProcessor.isExposedBySubstrate() |
-                antiHookByStackTrace.isExposedBySubstrate();
     }
 
-    public void bravoChecking(){
+    /*public void bravoChecking(){
         List<ApplicationInfo> processorList = antiHookByProcessor.getApplicationInfo();
         Iterator<ApplicationInfo> iterator = processorList.iterator();
         while(iterator.hasNext()){
             ApplicationInfo applicationInfo = iterator.next();
-            hasBravoExposed = antiHookByStackTrace.hasPackageNameInStack(applicationInfo.className);
+            String packageName = mContext.getPackageName();
+            if(null != applicationInfo.className && !applicationInfo.className.equals(packageName)) {
+                hasBravoExposed = antiHookByStackTrace.hasPackageNameInStack(applicationInfo.className);
+            }
         }
-    }
+    }*/
 
     public void stackTraceCatching(){
         antiHookByStackTrace.isExposed();
@@ -65,10 +65,6 @@ public class Strategy {
 
     public boolean isHasAlphaXposed() {
         return hasAlphaXposed;
-    }
-
-    public boolean isHasAlphaSubstrated() {
-        return hasAlphaSubstrated;
     }
 
     public boolean isHasBravoExposed() {
@@ -83,10 +79,23 @@ public class Strategy {
          * 该方法最安全
          */
         String device2 = SecureSettings.getDeviceIdLevel2(mContext);
-        if(device0.equals(device1) && device0.equals(device2) && device1.equals(device2)){
+        if(null == device0 || null == device1 || null == device2){
+            return "";
+        }
+
+        if(!device0.equals(device1) || !device0.equals(device2) || !device1.equals(device2)){
             hasBravoExposed = true;
         }
 
         return device2;
+    }
+
+    public String getSecureAndroidId(){
+        String androidId;
+        if (!TextUtils.isEmpty(androidId = SecureSettings.getAndroidPropertyLevel1(mContext, Settings.Secure.ANDROID_ID))
+                || !TextUtils.isEmpty(androidId = SecureSettings.getAndroidProperty(mContext, Settings.Secure.ANDROID_ID))) {
+            return androidId;
+        }
+        return Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 }
